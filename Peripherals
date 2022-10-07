@@ -1,0 +1,378 @@
+#include <stdio.h>
+#include <math.h>
+#include <conio.h>
+#define PI 3.14159265358979323846
+
+double gradosARadianes(double grados)
+{
+    return grados * PI / 180;
+}
+double radianesAGrados(double radianes)
+{
+    return radianes * 180 / PI;
+}
+int main()
+{
+    //  Variables de los datos de posicion, vleocidad y aceleracion
+
+    char str[8];
+    char Row;
+    float A, B, C, D, E, F, Link1, Link2, Link3, Link4, phi, phi31, phi32, phi41, phi42,
+        c, s, W, W31, W32, W41, W42, a2, Rpa, S3, K1, K2, K3, K4, K5, cg21, cg31,
+        VA, VAX, VAY, VAT, VAT2, VB, VBX, VBY, VBT, s1, c1, VBC, VBCX, VBCY, VPAC,
+        VPACX, VPACY, VPC, VPCX, VPCY, VPCT, VPCT2, VPA, VPAX, VPAY, VPAT, VP, VPX,
+        VPY, VPT, AA, AAX, AAY, AAT, AAT2, Aa, Ba, Ca, Da, Ea, Fa, alp31, alp41, AB, ABX, ABY, ABT, AP, AP1,
+        APX, APX1, APY, APY1, APT, Ac, Bc, Cc, Dc, Ec, Fc, alp32, alp42, ABC, ABCX, ABCY, ABCT, APC, APC1, APCX, APCX1, APCY,
+        APCY1, APCT;
+
+    // Presentacion del proyecto
+
+    printf("\nIniciando programa........");
+    printf("\nCargando Datos");
+    printf("\nTodo listo\nBienvenido\n");
+    printf("\n                 Creado por\n---------------------------Brayan de Jesus Yahve Fonseca Carrillo-----------------------------------\n\n");
+
+    // Peticion de Datos
+
+    printf("---------------> Ingrese los datos que se piden (Apriete ENTER al ingresar un dato) <---------------\n\n");
+    printf("Letter of the Row: ");
+    Row = getchar();
+    printf("Link 1: ");
+    scanf("%f", &Link1);
+    printf("Link 2: ");
+    scanf("%f", &Link2);
+    printf("Link 3: ");
+    scanf("%f", &Link3);
+    printf("Link 4: ");
+    scanf("%f", &Link4);
+    printf("Angle: ");
+    scanf("%f", &phi);
+    printf("Angular Velocity: ");
+    scanf("%f", &W);
+    printf("a2: ");
+    scanf("%f", &a2);
+    printf("Rpa: ");
+    scanf("%f", &Rpa);
+    printf("S3: ");
+    scanf("%f", &S3);
+
+    double grados = phi;
+    double cr = gradosARadianes(grados);
+    double gr = S3;
+    double S3r = gradosARadianes(grados);
+
+    // Operaciones para calcular "Open position"
+
+    double potencia = 2;
+    double el1 = pow(Link1, potencia);
+    double el2 = pow(Link2, potencia);
+    double el3 = pow(Link3, potencia);
+    double el4 = pow(Link4, potencia);
+
+    K1 = Link1 / Link2;
+    K2 = Link1 / Link4;
+    K3 = (el2 - el3 + el4 + el1) / (2 * Link2 * Link4);
+    A = cos(cr) - K1 - K2 * cos(cr) + K3;
+    B = -2 * sin(cr);
+    C = K1 - (K2 + 1) * cos(cr) + K3;
+
+    double B1 = pow(B, potencia);
+
+    phi41 = 2 * atan((-(B) - (sqrt((B1) - (4 * A * C)))) / (2 * A));
+
+    double radianes = phi41;
+    double cg = radianesAGrados(radianes);
+
+    K4 = Link1 / Link3;
+    K5 = (el4 - el1 - el2 - el3) / (2 * Link2 * Link3);
+    D = cos(cr) - K1 + K4 * cos(cr) + K5;
+    E = -2 * sin(cr);
+    F = K1 + (K4 - 1) * cos(cr) + K5;
+
+    double E1 = pow(E, potencia);
+
+    phi31 = 2 * atan((-(E) - (sqrt((E1) - (4 * D * F)))) / (2 * D));
+
+    double radianes1 = phi31;
+    double cg1 = radianesAGrados(radianes1);
+
+    // Operaciones para calcular "Close position"
+
+    phi42 = 2 * atan((-(B) + (sqrt((B1) - (4 * A * C)))) / (2 * A));
+
+    double radianes2 = phi42;
+    double cg2 = radianesAGrados(radianes2);
+
+    cg21 = cg2 + 360;
+    phi32 = 2 * atan((-(E) + (sqrt((E1) - (4 * D * F)))) / (2 * D));
+
+    double radianes3 = phi32;
+    double cg3 = radianesAGrados(radianes3);
+
+    cg31 = cg3 + 360;
+
+    // Operaciones para calcular "Velocity"
+
+    W31 = ((Link2 * W) / Link3) * ((sin(phi41 - cr)) / (sin(phi31 - phi41)));
+    W41 = ((Link2 * W) / Link4) * ((sin(cr - phi31)) / (sin(phi41 - phi31)));
+    VAX = (Link2 * W) * (-sin(cr));
+    VAY = (Link2 * W) * (cos(cr));
+
+    double VAX1 = pow(VAX, potencia);
+    double VAY1 = pow(VAY, potencia);
+
+    VA = sqrt(VAX1 + VAY1);
+    VAT = atan(VAY / VAX);
+
+    double radianes5 = VAT;
+    double VAT1 = radianesAGrados(radianes5);
+
+    VAT2 = VAT1 + 180;
+    VBX = (Link4 * W41) * (-sin(phi41));
+    VBY = (Link4 * W41) * (cos(phi41));
+
+    double VBX1 = pow(VBX, potencia);
+    double VBY1 = pow(VBY, potencia);
+
+    VB = sqrt(VBX1 + VBY1);
+    VBT = atan(VBY / VBX);
+
+    double radianes6 = VBT;
+    double VBT1 = radianesAGrados(radianes6);
+
+    VPAX = (Rpa * W31) * (-sin(phi31 + S3r));
+    VPAY = (Rpa * W31) * (cos(phi31 + S3r));
+
+    double VPAX1 = pow(VPAX, potencia);
+    double VPAY1 = pow(VPAY, potencia);
+
+    VPA = sqrt(VPAX1 + VPAY1);
+    VPAT = atan(VPAY / VPAX);
+
+    double radianes7 = VPAT;
+    double VPAT1 = radianesAGrados(radianes7);
+
+    VPX = VAX + VPAX;
+    VPY = VAY + VPAY;
+
+    double VPX1 = pow(VPX, potencia);
+    double VPY1 = pow(VPY, potencia);
+
+    VP = sqrt(VPX1 + VPY1);
+    VPT = atan(VPY / VPX);
+
+    double radianes8 = VPT;
+    double VPT1 = radianesAGrados(radianes8);
+
+    // Operaciones para calcular "Close velocity"
+
+    W32 = ((Link2 * W) / Link3) * ((sin(phi42 - cr)) / (sin(phi32 - phi42)));
+    W42 = ((Link2 * W) / Link4) * ((sin(cr - phi32)) / (sin(phi42 - phi32)));
+    VBCX = Link4 * W42 * (-sin(phi42));
+    VBCY = Link4 * W42 * (cos(phi42));
+    VPACX = (Rpa * W32) * (-sin(phi32 + S3r));
+    VPACY = (Rpa * W32) * (cos(phi32 + S3r));
+    VPCX = VAX + VPACX;
+    VPCY = VAY + VPACY;
+
+    double VPCX1 = pow(VPCX, potencia);
+    double VPCY1 = pow(VPCY, potencia);
+
+    VPC = sqrt(VPCX1 + VPCY1);
+    VPCT = atan(VPCY / VPCX);
+
+    double radianes9 = VPCT;
+    double VPCT1 = radianesAGrados(radianes9);
+
+    VPCT2 = VPCT1 + 180;
+
+    // Operaciones para calcular "Aceleration"
+
+    double W2 = pow(W, potencia);
+
+    c = cos(cr);
+    s = sin(cr);
+    AAX = -(Link2 * a2 * s) - (Link2 * W2 * cos(cr));
+    AAY = (Link2 * a2 * c) - (Link2 * W2 * sin(cr));
+
+    double AAX1 = pow(AAX, potencia);
+    double AAY1 = pow(AAY, potencia);
+
+    AA = sqrt(AAX1 + AAY1);
+    AAT = atan(AAY / AAX);
+
+    double radianes14 = AAT;
+    double AAT1 = radianesAGrados(radianes14);
+
+    AAT2 = AAT1 - 180;
+
+    double W312 = pow(W31, potencia);
+    double W412 = pow(W41, potencia);
+
+    Aa = Link4 * sin(phi41),
+    Ba = Link3 * sin(phi31);
+    Ca = ((Link2 * a2 * s) + (Link2 * W2 * c) + (Link3 * W312 * cos(phi31)) - (Link4 * W412 * cos(phi41)));
+    Da = Link4 * cos(phi41);
+    Ea = Link3 * cos(phi31);
+    Fa = ((Link2 * a2 * c) - (Link2 * W2 * s) - (Link3 * W312 * sin(phi31)) + (Link4 * W412 * sin(phi41)));
+    alp31 = (((Ca * Da) - (Aa * Fa)) / ((Aa * Ea) - (Ba * Da)));
+    alp41 = (((Ca * Ea) - (Ba * Fa)) / ((Aa * Ea) - (Ba * Da)));
+    ABX = -(Link4 * alp41 * sin(phi41)) - (Link4 * W412 * cos(phi41));
+    ABY = (Link4 * alp41 * cos(phi41)) - (Link4 * W412 * sin(phi41));
+
+    double ABX1 = pow(ABX, potencia);
+    double ABY1 = pow(ABY, potencia);
+
+    AB = sqrt(ABX1 + ABY1);
+    ABT = atan(ABY / ABX);
+
+    double radianes10 = ABT;
+    double ABT1 = radianesAGrados(radianes10);
+
+    APX = (Rpa * alp31 * (-sin(phi31 + S3r)) - (Rpa * W312 * (cos(phi31 + S3r))));
+    APY = (Rpa * alp31 * (cos(phi31 + S3r)) - (Rpa * W312 * (sin(phi31 + S3r))));
+    APX1 = AAX + APX;
+    APY1 = AAY + APY;
+
+    double APX2 = pow(APX1, potencia);
+    double APY2 = pow(APY1, potencia);
+
+    AP = sqrt(APX2 + APY2);
+    APT = atan(APY1 / APX1);
+
+    double radianes11 = APT;
+    double APT1 = radianesAGrados(radianes11);
+
+    // Operaciones para calcular "close aceleration"
+
+    double W322 = pow(W32, potencia);
+    double W422 = pow(W42, potencia);
+
+    Ac = Link4 * sin(phi42),
+    Bc = Link3 * sin(phi32);
+    Cc = ((Link2 * a2 * s) + (Link2 * W2 * c) + (Link3 * W322 * cos(phi32)) - (Link4 * W422 * cos(phi42)));
+    Dc = Link4 * cos(phi42);
+    Ec = Link3 * cos(phi32);
+    Fc = ((Link2 * a2 * c) - (Link2 * W2 * s) - (Link3 * W322 * sin(phi32)) + (Link4 * W422 * sin(phi42)));
+    alp32 = (((Cc * Dc) - (Ac * Fc)) / ((Ac * Ec) - (Bc * Dc)));
+    alp42 = (((Cc * Ec) - (Bc * Fc)) / ((Ac * Ec) - (Bc * Dc)));
+    ABCX = -(Link4 * alp42 * sin(phi42)) - (Link4 * W422 * cos(phi42));
+    ABCY = (Link4 * alp42 * cos(phi42)) - (Link4 * W422 * sin(phi42));
+
+    double ABCX1 = pow(ABCX, potencia);
+    double ABCY1 = pow(ABCY, potencia);
+
+    ABC = sqrt(ABCX1 + ABCY1);
+    ABCT = atan(ABCY / ABCX);
+
+    double radianes12 = ABCT;
+    double ABCT1 = radianesAGrados(radianes12);
+
+    APCX = (Rpa * alp32 * (-sin(phi32 + S3r)) - (Rpa * W322 * (cos(phi32 + S3r))));
+    APCY = (Rpa * alp32 * (cos(phi32 + S3r)) - (Rpa * W322 * (sin(phi32 + S3r))));
+    APCX1 = AAX + APCX;
+    APCY1 = AAY + APCY;
+
+    double APCX2 = pow(APCX1, potencia);
+    double APCY2 = pow(APCY1, potencia);
+
+    APC = sqrt(APCX2 + APCY2);
+    APCT = atan(APCY1 / APCX1);
+
+    double radianes13 = APCT;
+    double APCT1 = radianesAGrados(radianes13);
+
+    // Impresion de resultados
+
+    printf("\n\nPosition, Velocity and Aceleration in the row %c\n", Row);
+    printf("\n\n------------------------------>Results of Open Position<------------------------------\n\n");
+    printf("                              k1 = %f\n", K1);
+    printf("                              k2 = %f\n", K2);
+    printf("                              k3 = %f\n", K3);
+    printf("                              k4 = %f\n", K4);
+    printf("                              k5 = %f\n\n", K5);
+    printf("                              A = %f\n", A);
+    printf("                              B = %f\n", B);
+    printf("                              C = %f\n", C);
+    printf("                              D = %f\n", D);
+    printf("                              E = %f\n", E);
+    printf("                              F = %f\n\n", F);
+    printf("                              Phi41 = %f\n", cg);
+    printf("                              Phi31 = %f\n\n\n", cg1);
+    printf("\n\n------------------------------>Results of closed Position<------------------------------\n\n");
+    printf("                              Phi42 = %f\n", cg21);
+    printf("                              Phi32 = %f\n\n\n", cg31);
+    printf("\n\n------------------------------>Results of Open Velocity<------------------------------\n\n");
+    printf("                              W31 = %f\n", W31);
+    printf("                              W41 = %f\n", W41);
+    printf("                              VAX = %f\n", VAX);
+    printf("                              VAY = %f\n", VAY);
+    printf("                              VA = %f\n", VA);
+    printf("                              VA° = %f\n", VAT2);
+    printf("                              VBX = %f\n", VBX);
+    printf("                              VBY = %f\n", VBY);
+    printf("                              VB = %f\n", VB);
+    printf("                              VB° = %f\n", VBT1);
+    printf("                              VPAX = %f\n", VPAX);
+    printf("                              VPAX = %f\n", VPAY);
+    printf("                              VPA = %f\n", VPA);
+    printf("                              VPA° = %f\n", VPAT1);
+    printf("                              VPX = %f\n", VPX);
+    printf("                              VPY = %f\n", VPY);
+    printf("                              VP = %f\n", VP);
+    printf("                              VP° = %f\n", VPT1);
+    printf("\n\n------------------------------>Results of closed Velocity<------------------------------\n\n");
+    printf("                              W32 = %f\n", W32);
+    printf("                              W42 = %f\n", W42);
+    printf("                              VBX = %f\n", VBCX);
+    printf("                              VBY = %f\n", VBCY);
+    printf("                              VPA = %f\n", VPACX);
+    printf("                              VPA = %f\n", VPACY);
+    printf("                              VPX = %f\n", VPCX);
+    printf("                              VPY = %f\n", VPCY);
+    printf("                              VP = %f\n", VPC);
+    printf("                              VP° = %f\n", VPCT2);
+    printf("\n\n------------------------------>Results of open aceleration<------------------------------\n\n");
+    printf("                              AAX = %f\n", AAX);
+    printf("                              AAY = %f\n", AAY);
+    printf("                              AA = %f\n", AA);
+    printf("                              AAT° = %f\n", AAT2);
+    printf("                              A = %f\n", Aa);
+    printf("                              B = %f\n", Ba);
+    printf("                              C = %f\n", Ca);
+    printf("                              D = %f\n", Da);
+    printf("                              E = %f\n", Ea);
+    printf("                              F = %f\n", Fa);
+    printf("                              Alpha31 = %f\n", alp31);
+    printf("                              Alpha41 = %f\n", alp41);
+    printf("                              ABX1 = %f\n", ABX);
+    printf("                              ABY1 = %f\n", ABY);
+    printf("                              AB = %f\n", AB);
+    printf("                              ABT = %f\n", ABT1);
+    printf("                              APA1X = %f\n", APX);
+    printf("                              APA1Y = %f\n", APY);
+    printf("                              AP1X = %f\n", APX1);
+    printf("                              AP1Y = %f\n", APY1);
+    printf("                              AP1 = %f\n", AP);
+    printf("                              AP1T° = %f\n", APT1);
+    printf("\n\n------------------------------>Results of closed aceleration<------------------------------\n\n");
+    printf("                              A = %f\n", Ac);
+    printf("                              B = %f\n", Bc);
+    printf("                              C = %f\n", Cc);
+    printf("                              D = %f\n", Dc);
+    printf("                              E = %f\n", Ec);
+    printf("                              F = %f\n", Fc);
+    printf("                              Alpha32 = %f\n", alp32);
+    printf("                              Alpha42 = %f\n", alp42);
+    printf("                              ABX2 = %f\n", ABCX);
+    printf("                              ABY2 = %f\n", ABCY);
+    printf("                              AB = %f\n", ABC);
+    printf("                              ABT° = %f\n", ABCT1);
+    printf("                              APA2X = %f\n", APCX);
+    printf("                              APA2Y = %f\n", APCY);
+    printf("                              AP2X = %f\n", APCX1);
+    printf("                              AP2Y = %f\n", APCY1);
+    printf("                              AP2 = %f\n", APC);
+    printf("                              AP2T° = %f\n", APCT1);
+    return 0;
+}
